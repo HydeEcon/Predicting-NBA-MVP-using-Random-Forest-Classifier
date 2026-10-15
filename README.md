@@ -12,11 +12,15 @@ After our webscraper is done retrieving our data, it is time to clean it.  To do
 # Random Forest Classifier(s)
 
 After this first round of cleaning we are drop from 700,000 entries and 46 MVP winners, to just over 500 entries and 25 MVP winners, making a much more balanced data set.  So we run our first Random Forest Classifier, to determine if additional data preparation is needed.  Which gives us these results:
+
 <img width="497" height="207" alt="RFCResults_1" src="https://github.com/user-attachments/assets/e649f317-ada5-4706-a2e3-82d2dacb0aaa" />
+
 So what does this mean?  Well there's a few measures that we need to care about.  First, 0 and 1 are dummy variables, where 0 means didn't win MVP, and 1 means did when MVP.  Under precession we can see the model was very accurate, 94%, when determining who didn't win MVP, but very inaccurate, at 50%, when predicting who would win MVP.  We also see that under recall, the measure that shows how often our model was able to predict the MVP winner in our data set, there is a 99% accuracy for not winning MVP, and only a 14% accuracy for winning.  This clearly shows that our model is very biased, and simply just predicting everyone won't win MVP, as the majority of people don't.  This is great for predicting who won't win MVP, but that's not what we're going for, we need our "1" dummy variable to have a higher accuracy.  So lets add some hyperparameters and a seasonal loop.
 
 Our seasonal loop basically makes it so our predictive model looks at our data in groups of seasons, rather than all at once.  So for example, if it's trying to predict the 2006 MVP winner, it won't compare data from 2003 against data from 2019.  We also make it so data is trained on previous seasons, rather than future seasons.  This means if our model is predicting the 2010 MVP winner, it will look at data from 2001, then 2002, then 2003, etc, again preventing future data to predict past outcome.  We also include hyperparameters, such as adding n-estimators, a way to prevent overfitting, and a class weight, which prevent the model from just defaulting to 0 like it originally did.  Doing this gives us these results:
+
 <img width="527" height="197" alt="RFCResults_2" src="https://github.com/user-attachments/assets/8dce6aee-5795-403a-a6c9-64e6a94eaa4a" />
+
 As we can see, our model is far more accurate.  The recall rate jumps up from 14% all the way to 42%.  We also see the model has a macro average (combines the accuracy of predicting didn't win MVP and winning MVP), of 69%, a significant improvement from the 57% of our original model. This means our model is no longer just guessing 0 for every player, and actually determining if a player with specific stats will win or not.  While the recall is still under 50%, and there are some improvements that can be made, a predictive model with a ~70% is still both accurate and useful.
 
 # The 2026-2027 Season
